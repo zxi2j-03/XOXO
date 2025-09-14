@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>XO — zxi2j.03</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- خلفية متحركة -->
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+
+  <!-- شريط علوي -->
+  <header class="hud">
+    <div class="pill"><strong>النمط:</strong> <span id="modeLabel">—</span></div>
+    <div class="pill"><strong>الدور:</strong> <span id="turnLabel">—</span></div>
+    <div class="pill"><strong>النتيجة:</strong>
+      <span id="scoreX">X: 0</span> — <span id="scoreO">O: 0</span> — <span id="scoreDraw">تعادل: 0</span>
+    </div>
+    <div class="pill"><strong>حد النقاط:</strong> <span id="maxLabel">—</span></div>
+  </header>
+
+  <!-- منطقة اللعبة -->
+  <main class="container">
+    <h1 class="title">XO</h1>
+
+    <div class="controls">
+      <button id="restartBtn" class="btn ghost">إعادة الجولة</button>
+      <button id="resetMatchBtn" class="btn ghost">تصفير المباراة</button>
+    </div>
+
+    <div id="status" class="status">اختر الإعدادات من شاشة البداية.</div>
+
+    <div id="board" class="board" role="grid" aria-label="لوح XO">
+      <button class="cell" data-idx="0" role="gridcell" aria-label="خلية 1"></button>
+      <button class="cell" data-idx="1" role="gridcell" aria-label="خلية 2"></button>
+      <button class="cell" data-idx="2" role="gridcell" aria-label="خلية 3"></button>
+      <button class="cell" data-idx="3" role="gridcell" aria-label="خلية 4"></button>
+      <button class="cell" data-idx="4" role="gridcell" aria-label="خلية 5"></button>
+      <button class="cell" data-idx="5" role="gridcell" aria-label="خلية 6"></button>
+      <button class="cell" data-idx="6" role="gridcell" aria-label="خلية 7"></button>
+      <button class="cell" data-idx="7" role="gridcell" aria-label="خلية 8"></button>
+      <button class="cell" data-idx="8" role="gridcell" aria-label="خلية 9"></button>
+    </div>
+  </main>
+
+  <!-- شاشة البداية -->
+  <div id="startScreen" class="overlay">
+    <div class="panel">
+      <h2>مرحبًا بك في XO</h2>
+
+      <div class="group">
+        <label class="label">اختر النمط:</label>
+        <div class="row">
+          <label class="chip"><input type="radio" name="mode" value="cpu" checked /> ضد الروبوت</label>
+          <label class="chip"><input type="radio" name="mode" value="human" /> مع صديق (نفس الهاتف)</label>
+        </div>
+      </div>
+
+      <div class="group">
+        <label class="label">الحد الأقصى للنقاط (الفوز بالمباراة):</label>
+        <select id="maxPoints" class="select">
+          <option value="1">1 نقطة</option>
+          <option value="3" selected>3 نقاط</option>
+          <option value="5">5 نقاط</option>
+          <option value="7">7 نقاط</option>
+          <option value="10">10 نقاط</option>
+        </select>
+      </div>
+
+      <button id="startBtn" class="btn primary">ابدأ</button>
+    </div>
+  </div>
+
+  <!-- شاشة نهاية المباراة -->
+  <div id="endScreen" class="overlay hidden">
+    <div class="panel">
+      <h2 id="endTitle">انتهت المباراة!</h2>
+      <p id="endMsg">الفائز هو —</p>
+      <div class="row">
+        <button id="newMatchBtn" class="btn primary">مباراة جديدة</button>
+        <button id="closeEndBtn" class="btn ghost">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- العلامة الشخصية -->
+  <div id="branding">
+    <img src="Tessa.jpg" alt="zxi2j.03" id="profilePic" />
+    <span id="username">zxi2j.03</span>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
