@@ -134,4 +134,100 @@ const LINES = [
 ];
 
 function setStatus(msg){ statusEl.textContent = msg; }
-function
+function updateTurn(){ turnLabel.textContent = xTurn ? "X" : "O"; }
+function updateScoreUI(){
+  scoreXEl.textContent = `X: ${score.X}`;
+  scoreOEl.textContent = `O: ${score.O}`;
+  scoreDrawEl.textContent = `تعادل: ${score.D}`;
+}
+function emptyIndices(b){ return b.map((v,i)=>v?null:i).filter(v=>v!==null); }
+function winner(b){
+  for(const [a,b1,c] of LINES){
+    if(b[a] && b[a]===b[b1] && b[a]===b[c]) return {sym:b[a], line:[a,b1,c]};
+  }
+  return null;
+}
+function isFull(b){ return b.every(Boolean); }
+
+function animatePlace(cell){
+  cell.style.transform = "scale(0.7)";
+  cell.style.opacity = "0.2";
+  requestAnimationFrame(()=>{
+    cell.style.transition = "transform .18s ease, opacity .18s ease, background .2s ease";
+    cell.style.transform = "scale(1)";
+    cell.style.opacity = "1";
+  });
+}
+
+function place(idx, sym){
+  board[idx] = sym;
+  const cell = cells[idx];
+  cell.textContent = sym;
+  cell.disabled = true;
+  animatePlace(cell);
+}
+
+function cpuMove(){
+  const idx = findBestMove(board, 'O', 'X');
+  place(idx, 'O');
+
+  const res = winner(board);
+  if(res){ lock=false; return endRound(res.sym, res.line); }
+  if(isFull(board)){ lock=false; return endRound('D'); }
+
+  xTurn = true;
+  updateTurn();
+  lock = false;
+}
+
+function findBestMove(b, me, opp){
+  const empties = emptyIndices(b);
+
+  if (difficultyLevel === "low") {
+    return empties[Math.floor(Math.random() * empties.length)];
+  }
+
+  for(const i of empties){ const c=b.slice(); c[i]=me; if(winner(c)) return i; }
+  for(const i of empties){ const c=b.slice(); c[i]=opp; if(winner(c)) return i; }
+  if(!b[4]) return 4;
+  const corners=[0,2,6,8].filter(i=>!b[i]);
+  if(corners.length) return corners[Math.floor(Math.random()*corners.length)];
+  return empties[Math.floor(Math.random()*empties.length)];
+}
+
+function endRound(sym, line){
+  if(sym === 'D'){
+    setStatus("🤝 تعادل! جولة جديدة؟");
+    score.D++;
+  } else {
+    score[sym]++;
+    if(line){ line.forEach(i => cells[i].classList.add("win")); }
+
+    if(vsCpu) {
+      if(sym === 'O') {
+        setStatus("😢 خسرت الجولة! الروبوت كان ذكيًا هذه المرة.");
+      } else if(sym === 'X') {
+        setStatus("😄 أحسنت! الروبوت خسر هذه الجولة.");
+      }
+    } else {
+      setStatus(`الفائز: ${sym}!`);
+    }
+  }
+
+  updateScoreUI();
+  lock = true;
+  cells.forEach(c => c.disabled = true);
+
+  if(score.X >= MAX_POINTS || score.O >= MAX_POINTS){
+    const champ = score.X >= MAX_POINTS ? 'X' : 'O';
+    endTitle.textContent = "انتهت المباراة!";
+    endMsg.textContent = `الفائز بالمباراة: ${champ} — النتيجة X ${score.X} : O ${score.O}`;
+    endScreen.classList.remove("hidden");
+  }
+}
+
+function restartRound(){
+  board = Array(9).fill(null);
+  xTurn = true;
+  lock = false;
+  difficulty
