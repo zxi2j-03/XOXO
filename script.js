@@ -125,7 +125,7 @@ let vsCpu = true;
 let lock = true;
 let score = { X:0, O:0, D:0 };
 let MAX_POINTS = 3;
-let difficultyLevel = "high";
+let difficultyLevel = "high"; // ← مستوى الذكاء المتغير
 
 const LINES = [
   [0,1,2],[3,4,5],[6,7,8],
@@ -234,5 +234,30 @@ function restartRound(){
     c.textContent = "";
     c.disabled = false;
     c.classList.remove("win");
-   }
-                }
+  });
+  setStatus("");
+  updateTurn();
+}
+
+// ...existing code...
+
+startBtn.addEventListener("click", () => {
+  // إخفاء شاشة البداية
+  startScreen.classList.add("hidden");
+
+  // إعادة ضبط اللعبة
+  lock = false;
+  setStatus("");
+  restartRound();
+
+  // تحديث الإعدادات حسب اختيار المستخدم
+  vsCpu = document.querySelector('input[name="mode"]:checked').value === "cpu";
+  modeLabel.textContent = vsCpu ? "ضد الروبوت" : "مع صديق";
+  MAX_POINTS = parseInt(maxPointsSel.value, 10);
+  maxLabel.textContent = MAX_POINTS;
+  score = { X:0, O:0, D:0 };
+  updateScoreUI();
+  updateTurn();
+});
+
+// ...existing code...
