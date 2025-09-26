@@ -234,5 +234,5 @@ function restartRound(){
     c.textContent = "";
     c.disabled = false;
     c.classList.remove("win");
-  }
+   }
                 }
