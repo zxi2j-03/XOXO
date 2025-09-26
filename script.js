@@ -235,3 +235,4 @@ function restartRound(){
     c.disabled = false;
     c.classList.remove("win");
   }
+                }
